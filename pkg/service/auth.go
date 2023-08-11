@@ -3,12 +3,11 @@ package service
 import (
 	"crypto/sha1"
 	"fmt"
+	"os"
 
 	tryrest "github.com/kolibri7557/try-rest-api"
 	"github.com/kolibri7557/try-rest-api/pkg/repository"
 )
-
-const salt = "gdsgdsgdlkshgjkh43tret5"
 
 type AuthService struct {
 	repo repository.Autorization
@@ -26,5 +25,5 @@ func (s *AuthService) CreateUser(user tryrest.User) (int, error) {
 func (s *AuthService) generatePasswordHash(password string) string {
 	hash := sha1.New()
 	hash.Write([]byte(password))
-	return fmt.Sprintf("%x", hash.Sum([]byte(salt)))
+	return fmt.Sprintf("%x", hash.Sum([]byte(os.Getenv("PASSWORD_HASH_SALT"))))
 }
