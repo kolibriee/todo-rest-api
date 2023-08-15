@@ -8,6 +8,7 @@ import (
 type Autorization interface {
 	CreateUser(user tryrest.User) (int, error)
 	GenerateToken(signinuser tryrest.SignInUser) (int, string, error)
+	ParseToken(token string) (int, error)
 }
 
 type TodoList interface {
