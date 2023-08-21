@@ -28,8 +28,7 @@ func (r *AuthPostgres) CreateUser(user tryrest.User) (int, error) {
 func (r *AuthPostgres) GetUser(signinuser tryrest.SignInUser) (tryrest.User, error) {
 	var user tryrest.User
 	query := fmt.Sprintf("SELECT id, name, username FROM %s WHERE username=$1 AND password_hash=$2", usersTable)
-	row := r.db.QueryRow(query, signinuser.Username, signinuser.Password)
-	if err := row.Scan(&user.Id, &user.Name, &user.Username); err != nil {
+	if err := r.db.Get(&user, query, signinuser.Username, signinuser.Password); err != nil {
 		return tryrest.User{}, err
 	}
 	return user, nil

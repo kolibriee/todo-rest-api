@@ -39,3 +39,21 @@ func (r *todoListPostgres) CreateList(userId int, list tryrest.TodoList) (int, e
 	}
 	return idList, nil
 }
+
+func (r *todoListPostgres) GetAllLists(userId int) ([]tryrest.TodoList, error) {
+	var lists []tryrest.TodoList
+	query := fmt.Sprintf("SELECT tl.id, tl.title, tl.description FROM %s tl INNER JOIN %s ul ON tl.id = ul.list_id WHERE ul.user_id = $1", TodoListsTable, usersListsTable)
+	if err := r.db.Select(&lists, query, userId); err != nil {
+		return nil, err
+	}
+	return lists, nil
+}
+
+func (r *todoListPostgres) GetByIdList(userId int, ListId int) (tryrest.TodoList, error) {
+	var list tryrest.TodoList
+	query := fmt.Sprintf("SELECT tl.id, tl.title, tl.description FROM %s tl INNER JOIN %s ul ON tl.id = ul.list_id WHERE ul.user_id = $1 AND ul.list_id = $2", TodoListsTable, usersListsTable)
+	if err := r.db.Get(&list, query, userId, ListId); err != nil {
+		return tryrest.TodoList{}, err
+	}
+	return list, nil
+}
