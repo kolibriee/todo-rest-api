@@ -13,7 +13,8 @@ type Autorization interface {
 type TodoList interface {
 	CreateList(userId int, list tryrest.TodoList) (int, error)
 	GetAllLists(userId int) ([]tryrest.TodoList, error)
-	GetByIdList(userId int, id int) (tryrest.TodoList, error)
+	GetListById(userId int, id int) (tryrest.TodoList, error)
+	DeleteList(userId int, id int) error
 }
 
 type TodoItem interface {
