@@ -1,5 +1,7 @@
 package tryrest
 
+import "errors"
+
 type TodoList struct {
 	Id          int    `json:"id" db:"id"`
 	Title       string `json:"title" binding:"required" db:"title"`
@@ -23,4 +25,16 @@ type ListItem struct {
 	Id     int
 	ListId int
 	ItemId int
+}
+
+type TodoListUpdate struct {
+	Title       *string `json:"title"`
+	Description *string `json:"description"`
+}
+
+func ValidateTodoListUpdate(list TodoListUpdate) error {
+	if list.Title == nil && list.Description == nil {
+		return errors.New("update must have title or description")
+	}
+	return nil
 }

@@ -3,9 +3,11 @@ package repository
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/jmoiron/sqlx"
 	tryrest "github.com/kolibri7557/try-rest-api"
+	"github.com/sirupsen/logrus"
 )
 
 type todoListPostgres struct {
@@ -62,6 +64,41 @@ func (r *todoListPostgres) GetListById(userId int, ListId int) (tryrest.TodoList
 func (r *todoListPostgres) DeleteList(userId int, ListId int) error {
 	query := fmt.Sprintf("DELETE FROM %s t1 USING %s u1 WHERE t1.id = u1.list_id AND u1.user_id = $1 AND u1.list_id = $2", todoListsTable, usersListsTable)
 	exec, err := r.db.Exec(query, userId, ListId)
+	if err != nil {
+		return err
+	}
+	rowsAffected, err := exec.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if rowsAffected == 0 {
+		return errors.New("list not found")
+	}
+	return nil
+}
+
+func (r *todoListPostgres) UpdateList(userId int, ListId int, list tryrest.TodoListUpdate) error {
+	var setValues []string
+	var args []interface{}
+	argsId := 1
+	if list.Title != nil {
+		setValues = append(setValues, fmt.Sprintf("title=$%d", argsId))
+		args = append(args, list.Title)
+		argsId++
+	}
+	if list.Description != nil {
+		setValues = append(setValues, fmt.Sprintf("description=$%d", argsId))
+		args = append(args, list.Description)
+		argsId++
+	}
+	setQuery := strings.Join(setValues, ", ")
+
+	query := fmt.Sprintf("UPDATE %s tl SET %s FROM %s ul WHERE tl.id = ul.list_id AND ul.user_id = $%d AND ul.list_id = $%d",
+		todoListsTable, setQuery, usersListsTable, argsId, argsId+1)
+	args = append(args, userId, ListId)
+	logrus.Debugf("query: %s", query)
+	logrus.Debugf("args: %v", args)
+	exec, err := r.db.Exec(query, args...)
 	if err != nil {
 		return err
 	}
