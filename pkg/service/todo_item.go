@@ -23,3 +23,7 @@ func (s *TodoItemService) CreateItem(userId int, listId int, item tryrest.TodoIt
 	}
 	return s.repo.CreateItem(listId, item)
 }
+
+func (s *TodoItemService) GetAllItems(userId int, listId int) ([]tryrest.TodoItem, error) {
+	return s.repo.GetAllItems(userId, listId)
+}

@@ -28,10 +28,6 @@ func (h *Handler) createList(c *gin.Context) {
 	})
 }
 
-type getAllListsResponse struct {
-	Data []tryrest.TodoList `json:"data"`
-}
-
 func (h *Handler) getAllLists(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -42,9 +38,7 @@ func (h *Handler) getAllLists(c *gin.Context) {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
-	c.JSON(http.StatusOK, getAllListsResponse{
-		Data: lists,
-	})
+	c.JSON(http.StatusOK, lists)
 }
 
 func (h *Handler) getListById(c *gin.Context) {
