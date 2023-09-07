@@ -24,6 +24,7 @@ type TodoItem interface {
 	GetAllItems(userID int, listID int) ([]tryrest.TodoItem, error)
 	GetItemById(userID int, itemId int) (tryrest.TodoItem, error)
 	DeleteItem(userID int, itemId int) error
+	UpdateItem(userID int, itemId int, item tryrest.TodoItemUpdate) error
 }
 
 type Service struct {

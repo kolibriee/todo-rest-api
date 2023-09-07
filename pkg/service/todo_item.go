@@ -35,3 +35,10 @@ func (s *TodoItemService) GetItemById(userId int, itemId int) (tryrest.TodoItem,
 func (s *TodoItemService) DeleteItem(userId int, itemId int) error {
 	return s.repo.DeleteItem(userId, itemId)
 }
+
+func (s *TodoItemService) UpdateItem(userId int, itemId int, item tryrest.TodoItemUpdate) error {
+	if err := tryrest.ValidateTodoItemUpdate(item); err != nil {
+		return err
+	}
+	return s.repo.UpdateItem(userId, itemId, item)
+}

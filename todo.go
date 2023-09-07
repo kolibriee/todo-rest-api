@@ -32,9 +32,22 @@ type TodoListUpdate struct {
 	Description *string `json:"description"`
 }
 
+type TodoItemUpdate struct {
+	Title       *string `json:"title"`
+	Description *string `json:"description"`
+	Done        *bool   `json:"done"`
+}
+
 func ValidateTodoListUpdate(list TodoListUpdate) error {
 	if list.Title == nil && list.Description == nil {
 		return errors.New("update must have title or description")
+	}
+	return nil
+}
+
+func ValidateTodoItemUpdate(item TodoItemUpdate) error {
+	if item.Title == nil && item.Description == nil && item.Done == nil {
+		return errors.New("update must have title or description or done")
 	}
 	return nil
 }
