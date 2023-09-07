@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
@@ -56,4 +57,20 @@ func (r *TodoItemPostgres) GetItemById(userId int, itemId int) (tryrest.TodoItem
 		return tryrest.TodoItem{}, err
 	}
 	return item, nil
+}
+
+func (r *TodoItemPostgres) DeleteItem(userId int, itemId int) error {
+	query := fmt.Sprintf("DELETE FROM %s ti USING %s li, %s ul WHERE ti.id = li.item_id AND li.list_id = ul.list_id AND ul.user_id = $1 AND li.item_id = $2", todoItemsTable, listsItemsTable, usersListsTable)
+	exec, err := r.db.Exec(query, userId, itemId)
+	if err != nil {
+		return err
+	}
+	rowsAffected, err := exec.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if rowsAffected == 0 {
+		return errors.New("item not found")
+	}
+	return nil
 }
