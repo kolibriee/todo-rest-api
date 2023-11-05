@@ -6,12 +6,12 @@ import (
 	"os/signal"
 	"syscall"
 
+	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/joho/godotenv"
 	tryrest "github.com/kolibri7557/try-rest-api"
 	"github.com/kolibri7557/try-rest-api/pkg/handler"
 	"github.com/kolibri7557/try-rest-api/pkg/repository"
 	"github.com/kolibri7557/try-rest-api/pkg/service"
-	_ "github.com/lib/pq"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
