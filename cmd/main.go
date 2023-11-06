@@ -8,10 +8,10 @@ import (
 
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/joho/godotenv"
-	domain "github.com/kostylevdev/todo-rest-api"
-	"github.com/kostylevdev/todo-rest-api/pkg/handler"
-	"github.com/kostylevdev/todo-rest-api/pkg/repository"
-	"github.com/kostylevdev/todo-rest-api/pkg/service"
+	"github.com/kostylevdev/todo-rest-api/internal/domain"
+	"github.com/kostylevdev/todo-rest-api/internal/handler"
+	"github.com/kostylevdev/todo-rest-api/internal/repository"
+	"github.com/kostylevdev/todo-rest-api/internal/service"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
