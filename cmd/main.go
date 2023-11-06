@@ -8,8 +8,8 @@ import (
 
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/joho/godotenv"
+	http "github.com/kostylevdev/todo-rest-api/internal/delivery/http"
 	"github.com/kostylevdev/todo-rest-api/internal/domain"
-	"github.com/kostylevdev/todo-rest-api/internal/handler"
 	"github.com/kostylevdev/todo-rest-api/internal/repository"
 	"github.com/kostylevdev/todo-rest-api/internal/service"
 	"github.com/sirupsen/logrus"
@@ -37,7 +37,7 @@ func main() {
 	}
 	repos := repository.NewRepository(db)
 	services := service.NewService(repos)
-	handlers := handler.NewHandler(services)
+	handlers := http.NewHandler(services)
 	var srv domain.Server
 	go func() {
 		if err := srv.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil {
