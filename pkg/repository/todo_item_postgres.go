@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/jmoiron/sqlx"
-	tryrest "github.com/kolibri7557/try-rest-api"
+	domain "github.com/kostylevdev/todo-rest-api"
 	"github.com/sirupsen/logrus"
 )
 
@@ -18,7 +18,7 @@ func NewTodoItemPostgres(db *sqlx.DB) *TodoItemPostgres {
 	return &TodoItemPostgres{db: db}
 }
 
-func (r *TodoItemPostgres) CreateItem(listId int, item tryrest.TodoItem) (int, error) {
+func (r *TodoItemPostgres) CreateItem(listId int, item domain.TodoItem) (int, error) {
 	tx, err := r.db.Begin()
 	if err != nil {
 		return 0, err
@@ -43,8 +43,8 @@ func (r *TodoItemPostgres) CreateItem(listId int, item tryrest.TodoItem) (int, e
 	return ItemId, nil
 }
 
-func (r *TodoItemPostgres) GetAllItems(userId int, listId int) ([]tryrest.TodoItem, error) {
-	var items []tryrest.TodoItem
+func (r *TodoItemPostgres) GetAllItems(userId int, listId int) ([]domain.TodoItem, error) {
+	var items []domain.TodoItem
 	query := fmt.Sprintf("SELECT ti.id, ti.title, ti.description, ti.done FROM %s ti INNER JOIN %s li ON ti.id = li.item_id INNER JOIN %s ul ON li.list_id = ul.list_id WHERE ul.list_id = $1 AND ul.user_id = $2", todoItemsTable, listsItemsTable, usersListsTable)
 	if err := r.db.Select(&items, query, listId, userId); err != nil {
 		return nil, err
@@ -52,11 +52,11 @@ func (r *TodoItemPostgres) GetAllItems(userId int, listId int) ([]tryrest.TodoIt
 	return items, nil
 }
 
-func (r *TodoItemPostgres) GetItemById(userId int, itemId int) (tryrest.TodoItem, error) {
-	var item tryrest.TodoItem
+func (r *TodoItemPostgres) GetItemById(userId int, itemId int) (domain.TodoItem, error) {
+	var item domain.TodoItem
 	query := fmt.Sprintf("SELECT ti.id, ti.title, ti.description, ti.done FROM %s ti INNER JOIN %s li ON ti.id = li.item_id INNER JOIN %s ul ON li.list_id = ul.list_id WHERE li.item_id = $1 AND ul.user_id = $2", todoItemsTable, listsItemsTable, usersListsTable)
 	if err := r.db.Get(&item, query, itemId, userId); err != nil {
-		return tryrest.TodoItem{}, err
+		return domain.TodoItem{}, err
 	}
 	return item, nil
 }
@@ -77,7 +77,7 @@ func (r *TodoItemPostgres) DeleteItem(userId int, itemId int) error {
 	return nil
 }
 
-func (r *TodoItemPostgres) UpdateItem(userId int, itemId int, item tryrest.TodoItemUpdate) error {
+func (r *TodoItemPostgres) UpdateItem(userId int, itemId int, item domain.TodoItemUpdate) error {
 	var setValues []string
 	var args []interface{}
 	argsId := 1

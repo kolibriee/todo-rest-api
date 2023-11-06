@@ -4,11 +4,11 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	tryrest "github.com/kolibri7557/try-rest-api"
+	domain "github.com/kostylevdev/todo-rest-api"
 )
 
 func (h *Handler) signUp(c *gin.Context) {
-	var input tryrest.User
+	var input domain.User
 
 	if err := c.BindJSON(&input); err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
@@ -25,7 +25,7 @@ func (h *Handler) signUp(c *gin.Context) {
 }
 
 func (h *Handler) signIn(c *gin.Context) {
-	var input tryrest.SignInUser
+	var input domain.SignInUser
 	if err := c.BindJSON(&input); err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 	}

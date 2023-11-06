@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt"
-	tryrest "github.com/kolibri7557/try-rest-api"
-	"github.com/kolibri7557/try-rest-api/pkg/repository"
+	domain "github.com/kostylevdev/todo-rest-api"
+	"github.com/kostylevdev/todo-rest-api/pkg/repository"
 )
 
 const (
@@ -29,12 +29,12 @@ func NewAuthService(repo repository.Autorization) *AuthService {
 	return &AuthService{repo: repo}
 }
 
-func (s *AuthService) CreateUser(user tryrest.User) (int, error) {
+func (s *AuthService) CreateUser(user domain.User) (int, error) {
 	user.Password = s.generatePasswordHash(user.Password)
 	return s.repo.CreateUser(user)
 }
 
-func (s *AuthService) GenerateToken(signinuser tryrest.SignInUser) (int, string, error) {
+func (s *AuthService) GenerateToken(signinuser domain.SignInUser) (int, string, error) {
 	signinuser.Password = s.generatePasswordHash(signinuser.Password)
 	user, err := s.repo.GetUser(signinuser)
 	if err != nil {

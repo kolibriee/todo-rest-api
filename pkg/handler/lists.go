@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	tryrest "github.com/kolibri7557/try-rest-api"
+	domain "github.com/kostylevdev/todo-rest-api"
 )
 
 func (h *Handler) createList(c *gin.Context) {
@@ -13,7 +13,7 @@ func (h *Handler) createList(c *gin.Context) {
 	if err != nil {
 		return
 	}
-	var input tryrest.TodoList
+	var input domain.TodoList
 	if err := c.BindJSON(&input); err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
@@ -70,7 +70,7 @@ func (h *Handler) updateList(c *gin.Context) {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
-	var input tryrest.TodoListUpdate
+	var input domain.TodoListUpdate
 	if err := c.BindJSON(&input); err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return

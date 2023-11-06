@@ -8,10 +8,10 @@ import (
 
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/joho/godotenv"
-	tryrest "github.com/kolibri7557/try-rest-api"
-	"github.com/kolibri7557/try-rest-api/pkg/handler"
-	"github.com/kolibri7557/try-rest-api/pkg/repository"
-	"github.com/kolibri7557/try-rest-api/pkg/service"
+	domain "github.com/kostylevdev/todo-rest-api"
+	"github.com/kostylevdev/todo-rest-api/pkg/handler"
+	"github.com/kostylevdev/todo-rest-api/pkg/repository"
+	"github.com/kostylevdev/todo-rest-api/pkg/service"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
@@ -38,12 +38,13 @@ func main() {
 	repos := repository.NewRepository(db)
 	services := service.NewService(repos)
 	handlers := handler.NewHandler(services)
-	var srv tryrest.Server
+	var srv domain.Server
 	go func() {
 		if err := srv.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil {
 			logrus.Fatalf("error occured while running http server: %s", err.Error())
 		}
 	}()
+	logrus.Info("todo app started")
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
 	<-quit

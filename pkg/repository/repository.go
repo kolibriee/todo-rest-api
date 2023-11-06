@@ -2,7 +2,7 @@ package repository
 
 import (
 	"github.com/jmoiron/sqlx"
-	tryrest "github.com/kolibri7557/try-rest-api"
+	tryrest "github.com/kostylevdev/todo-rest-api"
 )
 
 type Autorization interface {

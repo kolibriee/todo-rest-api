@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/jmoiron/sqlx"
-	tryrest "github.com/kolibri7557/try-rest-api"
+	domain "github.com/kostylevdev/todo-rest-api"
 	"github.com/sirupsen/logrus"
 )
 
@@ -18,7 +18,7 @@ func NewTodoListPostgres(db *sqlx.DB) *todoListPostgres {
 	return &todoListPostgres{db: db}
 }
 
-func (r *todoListPostgres) CreateList(userId int, list tryrest.TodoList) (int, error) {
+func (r *todoListPostgres) CreateList(userId int, list domain.TodoList) (int, error) {
 	tx, err := r.db.Begin()
 	if err != nil {
 		return 0, err
@@ -43,8 +43,8 @@ func (r *todoListPostgres) CreateList(userId int, list tryrest.TodoList) (int, e
 	return listId, nil
 }
 
-func (r *todoListPostgres) GetAllLists(userId int) ([]tryrest.TodoList, error) {
-	var lists []tryrest.TodoList
+func (r *todoListPostgres) GetAllLists(userId int) ([]domain.TodoList, error) {
+	var lists []domain.TodoList
 	query := fmt.Sprintf("SELECT tl.id, tl.title, tl.description FROM %s tl INNER JOIN %s ul ON tl.id = ul.list_id WHERE ul.user_id = $1", todoListsTable, usersListsTable)
 	if err := r.db.Select(&lists, query, userId); err != nil {
 		return nil, err
@@ -52,11 +52,11 @@ func (r *todoListPostgres) GetAllLists(userId int) ([]tryrest.TodoList, error) {
 	return lists, nil
 }
 
-func (r *todoListPostgres) GetListById(userId int, ListId int) (tryrest.TodoList, error) {
-	var list tryrest.TodoList
+func (r *todoListPostgres) GetListById(userId int, ListId int) (domain.TodoList, error) {
+	var list domain.TodoList
 	query := fmt.Sprintf("SELECT tl.id, tl.title, tl.description FROM %s tl INNER JOIN %s ul ON tl.id = ul.list_id WHERE ul.user_id = $1 AND ul.list_id = $2", todoListsTable, usersListsTable)
 	if err := r.db.Get(&list, query, userId, ListId); err != nil {
-		return tryrest.TodoList{}, err
+		return domain.TodoList{}, err
 	}
 	return list, nil
 }
@@ -77,7 +77,7 @@ func (r *todoListPostgres) DeleteList(userId int, ListId int) error {
 	return nil
 }
 
-func (r *todoListPostgres) UpdateList(userId int, ListId int, list tryrest.TodoListUpdate) error {
+func (r *todoListPostgres) UpdateList(userId int, ListId int, list domain.TodoListUpdate) error {
 	var setValues []string
 	var args []interface{}
 	argsId := 1

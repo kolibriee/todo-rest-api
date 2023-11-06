@@ -1,30 +1,30 @@
 package service
 
 import (
-	tryrest "github.com/kolibri7557/try-rest-api"
-	"github.com/kolibri7557/try-rest-api/pkg/repository"
+	domain "github.com/kostylevdev/todo-rest-api"
+	"github.com/kostylevdev/todo-rest-api/pkg/repository"
 )
 
 type Autorization interface {
-	CreateUser(user tryrest.User) (int, error)
-	GenerateToken(signinuser tryrest.SignInUser) (int, string, error)
+	CreateUser(user domain.User) (int, error)
+	GenerateToken(signinuser domain.SignInUser) (int, string, error)
 	ParseToken(token string) (int, error)
 }
 
 type TodoList interface {
-	CreateList(userID int, list tryrest.TodoList) (int, error)
-	GetAllLists(userID int) ([]tryrest.TodoList, error)
-	GetListById(userID int, id int) (tryrest.TodoList, error)
+	CreateList(userID int, list domain.TodoList) (int, error)
+	GetAllLists(userID int) ([]domain.TodoList, error)
+	GetListById(userID int, id int) (domain.TodoList, error)
 	DeleteList(userID int, id int) error
-	UpdateList(userID int, id int, list tryrest.TodoListUpdate) error
+	UpdateList(userID int, id int, list domain.TodoListUpdate) error
 }
 
 type TodoItem interface {
-	CreateItem(userID int, listID int, item tryrest.TodoItem) (int, error)
-	GetAllItems(userID int, listID int) ([]tryrest.TodoItem, error)
-	GetItemById(userID int, itemId int) (tryrest.TodoItem, error)
+	CreateItem(userID int, listID int, item domain.TodoItem) (int, error)
+	GetAllItems(userID int, listID int) ([]domain.TodoItem, error)
+	GetItemById(userID int, itemId int) (domain.TodoItem, error)
 	DeleteItem(userID int, itemId int) error
-	UpdateItem(userID int, itemId int, item tryrest.TodoItemUpdate) error
+	UpdateItem(userID int, itemId int, item domain.TodoItemUpdate) error
 }
 
 type Service struct {

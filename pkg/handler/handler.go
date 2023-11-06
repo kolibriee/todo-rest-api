@@ -2,7 +2,7 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/kolibri7557/try-rest-api/pkg/service"
+	"github.com/kostylevdev/todo-rest-api/pkg/service"
 )
 
 type Handler struct {
