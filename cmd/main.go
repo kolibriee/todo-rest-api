@@ -9,8 +9,8 @@ import (
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/joho/godotenv"
 	http "github.com/kostylevdev/todo-rest-api/internal/delivery/http"
-	"github.com/kostylevdev/todo-rest-api/internal/domain"
 	"github.com/kostylevdev/todo-rest-api/internal/repository"
+	server "github.com/kostylevdev/todo-rest-api/internal/server"
 	"github.com/kostylevdev/todo-rest-api/internal/service"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
@@ -38,7 +38,7 @@ func main() {
 	repos := repository.NewRepository(db)
 	services := service.NewService(repos)
 	handlers := http.NewHandler(services)
-	var srv domain.Server
+	var srv server.Server
 	go func() {
 		if err := srv.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil {
 			logrus.Fatalf("error occured while running http server: %s", err.Error())
