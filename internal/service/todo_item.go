@@ -37,7 +37,7 @@ func (s *TodoItemService) DeleteItem(userId int, itemId int) error {
 }
 
 func (s *TodoItemService) UpdateItem(userId int, itemId int, item domain.TodoItemUpdate) error {
-	if err := domain.ValidateTodoItemUpdate(item); err != nil {
+	if err := item.ValidateTodoItemUpdate(); err != nil {
 		return err
 	}
 	return s.repo.UpdateItem(userId, itemId, item)

@@ -1,4 +1,4 @@
-package main
+package app
 
 import (
 	"context"
@@ -8,7 +8,7 @@ import (
 
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/joho/godotenv"
-	http "github.com/kostylevdev/todo-rest-api/internal/delivery/http"
+	v1 "github.com/kostylevdev/todo-rest-api/internal/controller/http/v1"
 	"github.com/kostylevdev/todo-rest-api/internal/repository"
 	server "github.com/kostylevdev/todo-rest-api/internal/server"
 	"github.com/kostylevdev/todo-rest-api/internal/service"
@@ -16,9 +16,9 @@ import (
 	"github.com/spf13/viper"
 )
 
-func main() {
+func Run(configPath string) {
 	logrus.SetFormatter(new(logrus.JSONFormatter))
-	if err := initConfig(); err != nil {
+	if err := initConfig(configPath); err != nil {
 		logrus.Fatalf("error initializing configs: %s", err.Error())
 	}
 	if err := godotenv.Load(); err != nil {
@@ -35,13 +35,13 @@ func main() {
 	if err != nil {
 		logrus.Fatalf("failed to initialize db: %s", err.Error())
 	}
-	repos := repository.NewRepository(db)
-	services := service.NewService(repos)
-	handlers := http.NewHandler(services)
+	repository := repository.NewRepository(db)
+	service := service.NewService(repository)
+	controller := v1.NewHandler(service)
 	var srv server.Server
 	go func() {
-		if err := srv.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil {
-			logrus.Fatalf("error occured while running http server: %s", err.Error())
+		if err := srv.Run(viper.GetString("port"), controller.InitRouter()); err != nil {
+			logrus.Fatalf("error occured while runnirest server: %s", err.Error())
 		}
 	}()
 	logrus.Info("todo app started")
@@ -57,8 +57,8 @@ func main() {
 	}
 }
 
-func initConfig() error {
-	viper.AddConfigPath("configs")
+func initConfig(configPath string) error {
+	viper.AddConfigPath(configPath)
 	viper.SetConfigName("config")
 	return viper.ReadInConfig()
 }

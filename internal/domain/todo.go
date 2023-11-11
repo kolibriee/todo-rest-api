@@ -38,14 +38,14 @@ type TodoItemUpdate struct {
 	Done        *bool   `json:"done"`
 }
 
-func ValidateTodoListUpdate(list TodoListUpdate) error {
+func (list TodoListUpdate) ValidateTodoListUpdate() error {
 	if list.Title == nil && list.Description == nil {
 		return errors.New("update must have title or description")
 	}
 	return nil
 }
 
-func ValidateTodoItemUpdate(item TodoItemUpdate) error {
+func (item TodoItemUpdate) ValidateTodoItemUpdate() error {
 	if item.Title == nil && item.Description == nil && item.Done == nil {
 		return errors.New("update must have title or description or done")
 	}

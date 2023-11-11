@@ -30,7 +30,7 @@ func (s *TodoListService) DeleteList(userId int, ListId int) error {
 }
 
 func (s *TodoListService) UpdateList(userId int, ListId int, list domain.TodoListUpdate) error {
-	if err := domain.ValidateTodoListUpdate(list); err != nil {
+	if err := list.ValidateTodoListUpdate(); err != nil {
 		return err
 	}
 	return s.repo.UpdateList(userId, ListId, list)

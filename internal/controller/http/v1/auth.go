@@ -1,4 +1,4 @@
-package handler
+package v1
 
 import (
 	"net/http"
@@ -7,7 +7,7 @@ import (
 	"github.com/kostylevdev/todo-rest-api/internal/domain"
 )
 
-func (h *Handler) signUp(c *gin.Context) {
+func (h *Handler) SignUp(c *gin.Context) {
 	var input domain.User
 
 	if err := c.BindJSON(&input); err != nil {
@@ -24,7 +24,7 @@ func (h *Handler) signUp(c *gin.Context) {
 
 }
 
-func (h *Handler) signIn(c *gin.Context) {
+func (h *Handler) SignIn(c *gin.Context) {
 	var input domain.SignInUser
 	if err := c.BindJSON(&input); err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())

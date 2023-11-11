@@ -1,4 +1,4 @@
-package handler
+package v1
 
 import (
 	"errors"
@@ -13,7 +13,7 @@ const (
 	userCtx            = "userId"
 )
 
-func (h *Handler) userIdentity(c *gin.Context) {
+func (h *Handler) UserIdentity(c *gin.Context) {
 	authHeader := c.GetHeader(autorizationHeader)
 	if authHeader == "" {
 		newErrorResponse(c, http.StatusUnauthorized, "empty auth header")
