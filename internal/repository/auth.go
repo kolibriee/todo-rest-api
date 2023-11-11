@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"database/sql"
+	"errors"
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
@@ -17,6 +19,10 @@ func NewAuthPostgres(db *sqlx.DB) *AuthPostgres {
 
 func (r *AuthPostgres) CreateUser(user domain.User) (int, error) {
 	var id int
+	checkId := fmt.Sprintf("SELECT id FROM %s WHERE username=$1", usersTable)
+	if err := r.db.Get(&id, checkId, user.Username); err != sql.ErrNoRows {
+		return 0, errors.New("username already exists")
+	}
 	query := fmt.Sprintf("INSERT INTO %s (name, username, password_hash) VALUES ($1, $2, $3) RETURNING id", usersTable)
 	row := r.db.QueryRow(query, user.Name, user.Username, user.Password)
 	if err := row.Scan(&id); err != nil {
@@ -25,7 +31,7 @@ func (r *AuthPostgres) CreateUser(user domain.User) (int, error) {
 	return id, nil
 }
 
-func (r *AuthPostgres) GetUser(signinuser domain.SignInUser) (domain.User, error) {
+func (r *AuthPostgres) GetUser(signinuser domain.SignInUserInput) (domain.User, error) {
 	var user domain.User
 	query := fmt.Sprintf("SELECT id, name, username FROM %s WHERE username=$1 AND password_hash=$2", usersTable)
 	if err := r.db.Get(&user, query, signinuser.Username, signinuser.Password); err != nil {

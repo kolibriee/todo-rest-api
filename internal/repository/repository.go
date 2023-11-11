@@ -7,11 +7,11 @@ import (
 
 type Autorization interface {
 	CreateUser(user domain.User) (int, error)
-	GetUser(domain.SignInUser) (domain.User, error)
+	GetUser(domain.SignInUserInput) (domain.User, error)
 }
 
 type TodoList interface {
-	CreateList(userId int, list domain.TodoList) (int, error)
+	CreateList(userId int, list domain.TodoListCreate) (int, error)
 	GetAllLists(userId int) ([]domain.TodoList, error)
 	GetListById(userId int, id int) (domain.TodoList, error)
 	DeleteList(userId int, id int) error
@@ -19,7 +19,7 @@ type TodoList interface {
 }
 
 type TodoItem interface {
-	CreateItem(listId int, item domain.TodoItem) (int, error)
+	CreateItem(listId int, item domain.TodoItemCreate) (int, error)
 	GetAllItems(userId int, listId int) ([]domain.TodoItem, error)
 	GetItemById(userId int, itemId int) (domain.TodoItem, error)
 	DeleteItem(userId int, itemId int) error

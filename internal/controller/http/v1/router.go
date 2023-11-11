@@ -2,11 +2,15 @@ package v1
 
 import (
 	"github.com/gin-gonic/gin"
+	_ "github.com/kostylevdev/todo-rest-api/docs"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func (h *Handler) InitRouter() *gin.Engine {
 	router := gin.New()
 	router.Use(gin.Logger())
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	auth := router.Group("/auth")
 	{
 		auth.POST("sign-up", h.SignUp)

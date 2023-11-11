@@ -7,7 +7,7 @@ type User struct {
 	Password string `json:"password" binding:"required"`
 }
 
-type SignInUser struct {
+type SignInUserInput struct {
 	Username string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required"`
 }

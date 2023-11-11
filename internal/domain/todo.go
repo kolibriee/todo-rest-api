@@ -14,6 +14,16 @@ type UsersList struct {
 	ListId int
 }
 
+type TodoListCreate struct {
+	Title       string `json:"title" db:"title" binding:"required"`
+	Description string `json:"description" db:"description"`
+}
+
+type TodoItemCreate struct {
+	Title       string `json:"title" binding:"required"`
+	Description string `json:"description"`
+}
+
 type TodoItem struct {
 	Id          int    `json:"id" db:"id"`
 	Title       string `json:"title" binding:"required" db:"title"`
