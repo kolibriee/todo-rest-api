@@ -6,5 +6,10 @@ DB migration: https://github.com/golang-migrate/migrate
 
 .env:
 
-- DB_PASSWORD=_your password_
-- PASSWORD_HASH_SALT=_something_
+DB_PASSWORD
+DB_HOST
+DB_PORT
+DB_USERNAME
+DB_DBNAME
+DB_SSLMODE
+PASSWORD_HASH_SALT
