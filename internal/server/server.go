@@ -3,20 +3,21 @@ package domain
 import (
 	"context"
 	"net/http"
-	"time"
+
+	"github.com/kostylevdev/todo-rest-api/internal/config"
 )
 
 type Server struct {
 	httpServer *http.Server
 }
 
-func (s *Server) Run(port string, handler http.Handler) error {
+func (s *Server) Run(cfg *config.Server, handler http.Handler) error {
 	s.httpServer = &http.Server{
-		Addr:           ":" + port,
+		Addr:           ":" + cfg.Port,
 		Handler:        handler,
-		MaxHeaderBytes: 1 << 20,
-		ReadTimeout:    10 * time.Second,
-		WriteTimeout:   10 * time.Second,
+		MaxHeaderBytes: cfg.MaxHeaderBytes,
+		ReadTimeout:    cfg.ReadTimeout,
+		WriteTimeout:   cfg.WriteTimeout,
 	}
 	return s.httpServer.ListenAndServe()
 }

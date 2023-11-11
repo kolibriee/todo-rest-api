@@ -1,7 +1,5 @@
-port: "8000"
-db:
-  host: "localhost"
-  port: "5433"
-  username: "postgres"
-  dbname: "postgres"
-  sslmode: "disable"
+server:
+  port: "8000"
+  maxHeaderBytes: 1048576
+  readTimeout: 10s
+  writeTimeout: 10s

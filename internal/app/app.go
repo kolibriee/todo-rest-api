@@ -7,13 +7,12 @@ import (
 	"syscall"
 
 	_ "github.com/jackc/pgx/v5/stdlib"
-	"github.com/joho/godotenv"
+	"github.com/kostylevdev/todo-rest-api/internal/config"
 	v1 "github.com/kostylevdev/todo-rest-api/internal/controller/http/v1"
 	"github.com/kostylevdev/todo-rest-api/internal/repository"
 	server "github.com/kostylevdev/todo-rest-api/internal/server"
 	"github.com/kostylevdev/todo-rest-api/internal/service"
 	"github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
 )
 
 //
@@ -27,21 +26,19 @@ import (
 // @securityDefinitions.apikey	ApiKeyAuth
 // @in							header
 // @name						Authorization
-func Run(configPath string) {
+func Run(configPath string, configName string) {
 	logrus.SetFormatter(new(logrus.JSONFormatter))
-	if err := initConfig(configPath); err != nil {
-		logrus.Fatalf("error initializing configs: %s", err.Error())
+	cfg, err := config.New(configPath, configName)
+	if err != nil {
+		logrus.Fatalf("failed to read config: %s", err.Error())
 	}
-	if err := godotenv.Load(); err != nil {
-		logrus.Fatalf("error loading env variables: %s", err.Error())
-	}
-	db, err := repository.NewPostgresDB(&repository.Config{
-		Host:     viper.GetString("db.host"),
-		Port:     viper.GetString("db.port"),
-		Username: viper.GetString("db.username"),
-		Password: os.Getenv("DB_PASSWORD"),
-		DBName:   viper.GetString("db.dbname"),
-		SSLMode:  viper.GetString("db.sslmode"),
+	db, err := repository.NewPostgresDB(&config.Postgres{
+		Host:     cfg.Postgres.Host,
+		Port:     cfg.Postgres.Port,
+		Username: cfg.Postgres.Username,
+		Password: cfg.Postgres.Password,
+		DBName:   cfg.Postgres.DBName,
+		SSLMode:  cfg.Postgres.SSLMode,
 	})
 	if err != nil {
 		logrus.Fatalf("failed to initialize db: %s", err.Error())
@@ -51,7 +48,7 @@ func Run(configPath string) {
 	controller := v1.NewHandler(service)
 	var srv server.Server
 	go func() {
-		if err := srv.Run(viper.GetString("port"), controller.InitRouter()); err != nil {
+		if err := srv.Run(&cfg.Server, controller.InitRouter()); err != nil {
 			logrus.Fatalf("error occured while runnirest server: %s", err.Error())
 		}
 	}()
@@ -66,10 +63,4 @@ func Run(configPath string) {
 	if err := db.Close(); err != nil {
 		logrus.Errorf("error occured on db connection close: %s", err.Error())
 	}
-}
-
-func initConfig(configPath string) error {
-	viper.AddConfigPath(configPath)
-	viper.SetConfigName("config")
-	return viper.ReadInConfig()
 }
