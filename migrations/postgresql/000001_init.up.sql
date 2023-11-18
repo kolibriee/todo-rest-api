@@ -3,7 +3,8 @@ CREATE TABLE users
     id serial not null unique,
     name varchar(255) not null,
     username varchar(255) not null,
-    password_hash varchar(255) not null
+    password_hash varchar(255) not null,
+    registered_at timestamp not null default now()
 );
 
 CREATE TABLE todo_lists 
@@ -33,4 +34,13 @@ CREATE TABLE lists_items
     id serial not null unique,
     list_id int references todo_lists (id) on delete cascade not null,
     item_id int references todo_items (id) on delete cascade not null
+);
+
+CREATE TABLE sessions
+(
+    id serial not null unique,
+    user_id int references users (id) on delete cascade not null,
+    ip inet not null,
+    refresh_token uuid not null default gen_random_uuid(),
+    expires_at timestamp not null
 );

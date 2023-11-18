@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
@@ -52,6 +53,7 @@ func Run(configPath string, configName string) {
 			logrus.Fatalf("error occured while runnirest server: %s", err.Error())
 		}
 	}()
+	fmt.Println(os.Getenv("TOKEN_SECRET_KEY"))
 	logrus.Info("todo app started")
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)

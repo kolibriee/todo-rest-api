@@ -8,6 +8,9 @@ import (
 type Autorization interface {
 	CreateUser(user domain.User) (int, error)
 	GetUser(domain.SignInUserInput) (domain.User, error)
+	CreateSession(session domain.Session) (string, error)
+	GetSession(refreshToken string) (domain.Session, error)
+	DeleteSession(refreshToken string) error
 }
 
 type TodoList interface {

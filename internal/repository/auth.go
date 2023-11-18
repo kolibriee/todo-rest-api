@@ -21,6 +21,9 @@ func (r *AuthPostgres) CreateUser(user domain.User) (int, error) {
 	var id int
 	checkId := fmt.Sprintf("SELECT id FROM %s WHERE username=$1", usersTable)
 	if err := r.db.Get(&id, checkId, user.Username); err != sql.ErrNoRows {
+		if err != nil {
+			return 0, err
+		}
 		return 0, errors.New("username already exists")
 	}
 	query := fmt.Sprintf("INSERT INTO %s (name, username, password_hash) VALUES ($1, $2, $3) RETURNING id", usersTable)
@@ -38,4 +41,31 @@ func (r *AuthPostgres) GetUser(signinuser domain.SignInUserInput) (domain.User, 
 		return domain.User{}, err
 	}
 	return user, nil
+}
+
+func (r *AuthPostgres) CreateSession(session domain.Session) (string, error) {
+	var refreshToken string
+	query := fmt.Sprintf("INSERT INTO %s (user_id, expires_at, ip) VALUES ($1, $2, $3) RETURNING refresh_token", sessionsTable)
+	row := r.db.QueryRow(query, session.UserId, session.ExpiresAt, session.ClientIP)
+	if err := row.Scan(&refreshToken); err != nil {
+		return "", err
+	}
+	return refreshToken, nil
+}
+
+func (r *AuthPostgres) GetSession(refreshToken string) (domain.Session, error) {
+	var session domain.Session
+	query := fmt.Sprintf("SELECT id, user_id, expires_at, ip FROM %s WHERE refresh_token=$1", sessionsTable)
+	if err := r.db.Get(&session, query, refreshToken); err != nil {
+		return domain.Session{}, err
+	}
+	return session, nil
+}
+
+func (r *AuthPostgres) DeleteSession(refreshToken string) error {
+	query := fmt.Sprintf("DELETE FROM %s WHERE refresh_token=$1", sessionsTable)
+	if _, err := r.db.Exec(query, refreshToken); err != nil {
+		return err
+	}
+	return nil
 }

@@ -13,6 +13,7 @@ const (
 	todoItemsTable  = "todo_items"
 	usersListsTable = "users_lists"
 	listsItemsTable = "lists_items"
+	sessionsTable   = "sessions"
 )
 
 func NewPostgresDB(cfg *config.Postgres) (*sqlx.DB, error) {

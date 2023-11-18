@@ -27,7 +27,7 @@ func (h *Handler) SignUp(c *gin.Context) {
 	if err := c.BindJSON(&input); err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 	}
-	id, err := h.services.Autorization.CreateUser(input)
+	id, err := h.services.Autorization.SignUp(input)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -57,12 +57,31 @@ func (h *Handler) SignIn(c *gin.Context) {
 	if err := c.BindJSON(&input); err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 	}
-	token, err := h.services.Autorization.GenerateToken(input)
+	accessToken, refreshToken, err := h.services.Autorization.SignIn(c.ClientIP(), input)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
+	c.SetCookie("refreshToken", refreshToken, 0, "/", "", false, true)
 	c.JSON(http.StatusOK, map[string]interface{}{
-		"token": token,
+		"accessToken": accessToken,
+	})
+}
+
+func (h *Handler) Refresh(c *gin.Context) {
+	refreshToken, err := c.Cookie("refreshToken")
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	clientIP := c.ClientIP()
+	accessToken, newRefreshToken, err := h.services.Autorization.Refresh(refreshToken, clientIP)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	c.SetCookie("refreshToken", newRefreshToken, 0, "/", "", false, true)
+	c.JSON(http.StatusOK, map[string]interface{}{
+		"accessToken": accessToken,
 	})
 }
