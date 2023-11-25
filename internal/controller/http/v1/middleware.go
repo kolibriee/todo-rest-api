@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/kostylevdev/todo-rest-api/pkg/auth"
 )
 
 const (
@@ -24,7 +25,7 @@ func (h *Handler) UserIdentity(c *gin.Context) {
 		newErrorResponse(c, http.StatusUnauthorized, "invalid auth header")
 		return
 	}
-	userId, err := h.services.Autorization.ParseToken(headerParts[1])
+	userId, err := auth.ParseToken(headerParts[1])
 	if err != nil {
 		newErrorResponse(c, http.StatusUnauthorized, err.Error())
 		return

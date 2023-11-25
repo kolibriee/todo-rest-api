@@ -9,8 +9,6 @@ type Autorization interface {
 	SignUp(user domain.User) (int, error)
 	SignIn(clientIP string, signinuser domain.SignInUserInput) (string, string, error)
 	Refresh(refreshToken string, IP string) (string, string, error)
-	GenerateAccessToken(userId int) (string, error)
-	ParseToken(token string) (int, error)
 }
 
 type TodoList interface {
