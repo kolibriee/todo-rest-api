@@ -23,7 +23,6 @@ import (
 //	@Router			/auth/sign-up [post]
 func (h *Handler) SignUp(c *gin.Context) {
 	var input domain.User
-
 	if err := c.BindJSON(&input); err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 	}
