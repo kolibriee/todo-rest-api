@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
@@ -20,11 +21,11 @@ func NewPostgresDB(cfg *config.Postgres) (*sqlx.DB, error) {
 	db, err := sqlx.Open("pgx", fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
 		cfg.Host, cfg.Port, cfg.Username, cfg.Password, cfg.DBName, cfg.SSLMode))
 	if err != nil {
-		return nil, err
+		return nil, errors.New("failed to initialize db" + err.Error())
 	}
 	err = db.Ping()
 	if err != nil {
-		return nil, err
+		return nil, errors.New("failed to ping db" + err.Error())
 	}
 	return db, nil
 }
