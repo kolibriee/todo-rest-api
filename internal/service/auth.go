@@ -51,7 +51,7 @@ func (s *AuthService) SignIn(clientIP string, signinuser domain.SignInUserInput)
 func (s *AuthService) Refresh(refreshToken string, IP string) (string, string, error) {
 	session, err := s.repo.GetSession(refreshToken)
 	if err != nil {
-		return "", "", errors.New("invalid refresh token")
+		return "", "", errors.New("invalid refresh token" + err.Error())
 	}
 	if session.ClientIP != IP {
 		return "", "", errors.New("invalid ip")

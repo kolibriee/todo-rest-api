@@ -1,13 +1,15 @@
 package v1
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	_ "github.com/kostylevdev/todo-rest-api/docs"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-func (h *Handler) InitRouter() *gin.Engine {
+func (h *Handler) InitRouter() http.Handler {
 	router := gin.New()
 	router.Use(gin.Logger())
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
@@ -37,5 +39,5 @@ func (h *Handler) InitRouter() *gin.Engine {
 			}
 		}
 	}
-	return router
+	return router.Handler()
 }

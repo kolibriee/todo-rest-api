@@ -9,7 +9,7 @@ import (
 
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/kostylevdev/todo-rest-api/internal/config"
-	v1 "github.com/kostylevdev/todo-rest-api/internal/controller/http/v1"
+	ctrl "github.com/kostylevdev/todo-rest-api/internal/controller"
 	"github.com/kostylevdev/todo-rest-api/internal/repository"
 	server "github.com/kostylevdev/todo-rest-api/internal/server"
 	"github.com/kostylevdev/todo-rest-api/internal/service"
@@ -46,7 +46,7 @@ func Run(configPath string, configName string) {
 	}
 	repository := repository.NewRepository(db)
 	service := service.NewService(repository)
-	controller := v1.NewHandler(service)
+	controller := ctrl.NewController(service)
 	var srv server.Server
 	go func() {
 		if err := srv.Run(&cfg.Server, controller.InitRouter()); err != nil {
