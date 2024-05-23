@@ -39,5 +39,5 @@ func (h *Handler) InitRouter() http.Handler {
 			}
 		}
 	}
-	return router.Handler()
+	return router
 }
