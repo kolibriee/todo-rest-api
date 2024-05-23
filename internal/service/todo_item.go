@@ -5,6 +5,14 @@ import (
 	"github.com/kostylevdev/todo-rest-api/internal/repository"
 )
 
+type TodoItem interface {
+	CreateItem(userID int, listID int, item domain.TodoItemCreate) (int, error)
+	GetAllItems(userID int, listID int) ([]domain.TodoItem, error)
+	GetItemById(userID int, itemId int) (domain.TodoItem, error)
+	DeleteItem(userID int, itemId int) error
+	UpdateItem(userID int, itemId int, item domain.TodoItemUpdate) error
+}
+
 type TodoItemService struct {
 	repo     repository.TodoItem
 	repoList repository.TodoList

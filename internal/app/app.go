@@ -49,7 +49,7 @@ func Run(configPath string, configName string) {
 	controller := ctrl.NewController(service)
 	var srv server.Server
 	go func() {
-		if err := srv.Run(&cfg.Server, controller.InitRouter()); err != nil {
+		if err := srv.Run(&cfg.Server, controller.Handler.InitRouter()); err != nil {
 			logrus.Fatalf("error occured while runnirest server: %s", err.Error())
 		}
 	}()

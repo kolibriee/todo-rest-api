@@ -9,6 +9,10 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
+type RouterInitializer interface {
+	InitRouter() http.Handler
+}
+
 func (h *Handler) InitRouter() http.Handler {
 	router := gin.New()
 	router.Use(gin.Logger())
