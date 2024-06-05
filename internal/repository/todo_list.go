@@ -10,14 +10,6 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type TodoList interface {
-	CreateList(userId int, list domain.TodoListCreate) (int, error)
-	GetAllLists(userId int) ([]domain.TodoList, error)
-	GetListById(userId int, id int) (domain.TodoList, error)
-	DeleteList(userId int, id int) error
-	UpdateList(userId int, id int, list domain.TodoListUpdate) error
-}
-
 type todoListPostgres struct {
 	db *sqlx.DB
 }

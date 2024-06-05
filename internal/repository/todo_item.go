@@ -10,13 +10,6 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type TodoItem interface {
-	CreateItem(listId int, item domain.TodoItemCreate) (int, error)
-	GetAllItems(userId int, listId int) ([]domain.TodoItem, error)
-	GetItemById(userId int, itemId int) (domain.TodoItem, error)
-	DeleteItem(userId int, itemId int) error
-	UpdateItem(userId int, itemId int, item domain.TodoItemUpdate) error
-}
 type TodoItemPostgres struct {
 	db *sqlx.DB
 }

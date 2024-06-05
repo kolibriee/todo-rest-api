@@ -14,12 +14,6 @@ const (
 	refreshTokenTTL = 30 * 24 * time.Hour
 )
 
-type Autorization interface {
-	SignUp(user domain.User) (int, error)
-	SignIn(clientIP string, signinuser domain.SignInUserInput) (string, string, error)
-	Refresh(refreshToken string, IP string) (string, string, error)
-}
-
 type AuthService struct {
 	repo repository.Autorization
 }
