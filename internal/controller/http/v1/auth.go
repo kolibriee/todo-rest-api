@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -24,7 +25,8 @@ import (
 func (h *Handler) SignUp(c *gin.Context) {
 	var input domain.User
 	if err := c.BindJSON(&input); err != nil {
-		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		newErrorResponse(c, http.StatusBadRequest, errors.New("invalid input body").Error())
+		return
 	}
 	id, err := h.services.Autorization.SignUp(input)
 	if err != nil {
